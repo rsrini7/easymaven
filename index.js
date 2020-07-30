@@ -3,8 +3,13 @@ var request = require('request')
   , readline = require('readline')
   , fs = require('fs');
 
-module.exports = function(pomPath, artifact) {
-  var searchPath = ['http://search.maven.org/solrsearch/select?q=a:%22', artifact, '%22&wt=json'].join('');
+module.exports = function(pomPath, artifact, rows) {
+  if(!Number.isInteger(parseInt(rows)) || parseInt(rows) < 1){
+    console.log("Setting default number of rows as 20");
+    rows = 20;
+  }
+  var searchPath = ['http://search.maven.org/solrsearch/select?q=a:', artifact, '&wt=json&start=0&rows=',rows].join('');
+
   request(searchPath, function(err, response, body) {
     if(err) throw err;
     var data = JSON.parse(body);
