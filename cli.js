@@ -7,14 +7,18 @@ var easymaven = require('./index.js');
 var args = process.argv;
 var cwd = process.cwd();
 
-if(args.length != 3) {
+if(args.length != 3 && args.length != 4) {
   console.log('Wrong usage, you must inform the artifact, example "easymaven gson"');
 } else {
   var pomPath = path.join(cwd, 'pom.xml');
   fs.open(pomPath, "r+", function(error) {
     if(!error) {
       var artifact = args[2];
-      easymaven(pomPath, artifact);
+      var rows = 20;
+      if(args.length == 4){
+        rows = args[3];
+      }
+      easymaven(pomPath, artifact, rows);
     } else {
       switch(error.code) {
         case "EACCES":
